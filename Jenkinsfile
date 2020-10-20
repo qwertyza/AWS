@@ -13,18 +13,22 @@ pipeline {
                 stash(name: 'compiled-results', includes: '*.py*') 
             }
         }
-		stage('Test') { 
-            agent {
-                docker {
-                    image 'qnib/pytest' 
-                }
+		stage('Deliver') {
+            agent any
+            environment {
+                VOLUME = '$(pwd)/sources:/src'
+                IMAGE = 'cdrx/pyinstaller-linux:python2'
             }
             steps {
-                sh 'py.test --junit-xml test-reports/results.xml Tests.py' 
+                dir(path: env.BUILD_ID) {
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F Main.py'"
+                }
             }
             post {
-                always {
-                    junit 'test-reports/results.xml' 
+                success {
+                    archiveArtifacts "${env.BUILD_ID}/sources/dist/Main"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
                 }
             }
         }
