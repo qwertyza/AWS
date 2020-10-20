@@ -13,5 +13,20 @@ pipeline {
                 stash(name: 'compiled-results', includes: '*.py*') 
             }
         }
+		stage('Test') { 
+            agent {
+                docker {
+                    image 'qnib/pytest' 
+                }
+            }
+            steps {
+                sh 'py.test --junit-xml test-reports/results.xml Tests.py' 
+            }
+            post {
+                always {
+                    junit 'test-reports/results.xml' 
+                }
+            }
+        }
     }
 }
