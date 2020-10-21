@@ -23,6 +23,7 @@ pipeline {
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
+					sh "cat env.BUILD_ID"
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pwd; ls -l ;ls ..; pyinstaller -F Main.py'"
                 }
             }
