@@ -10,7 +10,7 @@ pipeline {
             steps {
 				sh 'pip install pysimplegui'	
                 sh 'python -m py_compile Main.py' 
-                stash(name: 'compiled-results', includes: '*.py*') 
+                stash(name: 'compiled-results', includes: 'Main.py*') 
             }
         }
 		stage('Deliver') {
