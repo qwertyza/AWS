@@ -10,6 +10,7 @@ pipeline {
             steps {
 				sh 'pip install pysimplegui'	
                 sh 'python -m py_compile Main.py' 
+				sh 'ls -l ; cat Main.py'
                 stash(name: 'compiled-results', includes: 'Main.py*') 
             }
         }
