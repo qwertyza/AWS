@@ -30,20 +30,19 @@ pipeline {
             
         }
 		stage('Upload') {
-			steps {
-			dir($HOME){
+		agent any
+		steps {
+				dir($HOME){
+					pwd(); //Log current directory
+						withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
 
-				pwd(); //Log current directory
+						 def identity=awsIdentity();//Log AWS credentials
 
-				withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
+						// Upload files from working directory 'dist' in your project workspace
+						s3Upload(bucket:"okulaginide", workingDir:'dist', includePathPattern:'**/*');
+						}
 
-					 def identity=awsIdentity();//Log AWS credentials
-
-					// Upload files from working directory 'dist' in your project workspace
-					s3Upload(bucket:"okulaginide", workingDir:'dist', includePathPattern:'**/*');
 				}
-
-				};
 			}
 		}
     }
