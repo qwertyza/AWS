@@ -11,7 +11,7 @@ pipeline {
 				sh 'pip install pysimplegui'	
                 sh 'python -m py_compile Main.py' 
 				sh 'ls -l ; cat Main.py'
-                stash(name: 'compiled-results', includes: 'Main.py*') 
+                stash(name: '${env.BUILD_ID}_compiled-results', includes: 'Main.py*') 
             }
         }
 		stage('Deliver') {
@@ -33,7 +33,7 @@ pipeline {
 			agent any
 			steps {
 				pwd()
-				unstash "compiled-results"
+				unstash "${env.BUILD_ID}_compiled-resultscompiled-results"
 				script {
 						withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
 						 def identity=awsIdentity()
