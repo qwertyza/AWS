@@ -32,16 +32,15 @@ pipeline {
 		stage('Upload') {
 			agent any
 			steps {
-				dir("$HOME"){
-					pwd()
-					script {
+				pwd()
+				unstash "compiled-results"
+				script {
 						withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
 						 def identity=awsIdentity()
 
 						sh 'ls -l ; pwd'
-						s3Upload(bucket:"okulaginide", workingDir:'dist', includePathPattern:'**/*')
+						s3Upload(bucket:"okulaginide", includePathPattern:'**/*')
 						}
-					}
 				}
 			}
 		}
