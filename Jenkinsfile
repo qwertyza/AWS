@@ -38,7 +38,7 @@ pipeline {
 						withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
 						 def identity=awsIdentity()
 
-						ls()
+						sh 'ls -l ; pwd'
 						s3Upload(bucket:"okulaginide", workingDir:'dist', includePathPattern:'**/*')
 						}
 					}
