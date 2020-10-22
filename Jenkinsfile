@@ -34,13 +34,14 @@ pipeline {
 			steps {
 				dir("$HOME"){
 					pwd()
+					script {
 						withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
 						 def identity=awsIdentity()
 
 
 						s3Upload(bucket:"okulaginide", workingDir:'dist', includePathPattern:'**/*')
 						}
-
+					}
 				}
 			}
 		}
