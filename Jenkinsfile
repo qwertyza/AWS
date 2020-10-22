@@ -8,7 +8,7 @@ pipeline {
                 }
             }
             steps {
-				echo '${env.BUILD_ID}'
+				echo "${env.BUILD_NUMBER}"
 				sh 'pip install pysimplegui'	
                 sh 'python -m py_compile Main.py' 
 				sh 'ls -l ; cat Main.py'
