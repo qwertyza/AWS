@@ -33,9 +33,10 @@ pipeline {
 		stage('Upload') {
 			agent any
 			steps {
+				dir("${env.BUILD_NUMBER}"){
 				pwd()
 				unstash "${env.BUILD_NUMBER}"
-				dir("${env.BUILD_NUMBER}"){
+				
 					script {
 						withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
 						 def identity=awsIdentity()
