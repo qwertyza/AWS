@@ -30,6 +30,7 @@ pipeline {
             
         }
 		stage('Upload') {
+			steps {
 			dir($HOME){
 
 				pwd(); //Log current directory
@@ -42,7 +43,8 @@ pipeline {
 					s3Upload(bucket:"okulaginide", workingDir:'dist', includePathPattern:'**/*');
 				}
 
-			};
+				};
+			}
 		}
     }
 }
