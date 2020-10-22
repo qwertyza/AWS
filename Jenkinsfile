@@ -35,13 +35,15 @@ pipeline {
 			steps {
 				pwd()
 				unstash "${env.BUILD_NUMBER}"
-				script {
+				dir("${env.BUILD_NUMBER}"){
+					script {
 						withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
 						 def identity=awsIdentity()
 
 						sh 'ls -l ; pwd'
 						s3Upload(bucket:"okulaginide", includePathPattern:'**/*')
 						}
+					}
 				}
 			}
 		}
