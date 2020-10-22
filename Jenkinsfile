@@ -23,15 +23,26 @@ pipeline {
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
-					sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pwd; ls -l ;ls ..; pyinstaller -F Main.py'"
+					sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pwd; ls -l ; pyinstaller -F Main.py'"
+					
                 }
             }
-            post {
-                success {
-                    archiveArtifacts "${env.BUILD_ID}/dist/Main"
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
-                }
-            }
+            
         }
+		stage('Upload') {
+			dir($HOME){
+
+				pwd(); //Log current directory
+
+				withAWS(region:'eu-west-1',credentials:'AWSfromJenkins') {
+
+					 def identity=awsIdentity();//Log AWS credentials
+
+					// Upload files from working directory 'dist' in your project workspace
+					s3Upload(bucket:"okulaginide", workingDir:'dist', includePathPattern:'**/*');
+				}
+
+			};
+		}
     }
 }
