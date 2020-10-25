@@ -25,6 +25,7 @@ pipeline {
                 dir(path: env.BUILD_ID) {
                     unstash(name: "${env.BUILD_NUMBER}")
 					sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pwd; ls -l ; pyinstaller -F Main.py'"
+					sh "echo 'LOOOOOOOL'"
 					stash(name: "${env.BUILD_NUMBER}", includes: 'Main.*') 
 					
                 }
